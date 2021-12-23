@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My page</title>
+    <style>
+        #meme_img {
+            width: 100px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h4>Your random meme:</h4>
+        <div>
+            <img id="meme_img" src="">
+            <br>Likes:
+            <span id="like_count">0</span>
+        </div>
+        <div>
+            <button onclick="refresh()">Get other meme</button>
+            <button onclick="like()">Like</button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        let current_id = -1;
+        fetch('/api/get_random_meme').then(resp => resp.json())
+        .then(json => {
+            document.getElementById('meme_img').src = json['url'];
+            document.getElementById('like_count').innerText = json['likes'];
+            current_id = json['id'];
+        });
+
+        function refresh() {
+            document.location.reload();
+        }
+
+        function like() {
+            fetch('/api/like/' + current_id).then(resp => resp.text())
+            .then(text => {
+                document.getElementById('like_count').innerText = text;
+            })
+        }
+    </script>
+</body>
+</html>
